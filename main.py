@@ -543,7 +543,7 @@ class Bot(BaseBot):
             elif message.lower().strip() == "fashionista":
                 await self.highrise.send_emote("emote-fashionista", user.id)
             
-            EmoteAdmin = ["OGToxic", "SilverChain07", "AyyBubbls", "_ECLIPxE"]
+            EmoteAdmin = ["sassika", "Ekichirou", "OGToxic", "SilverChain07", "AyyBubbls", "_ECLIPxE", "BabyyTwinkles"]
             if message.lower().strip() == "!reaction":
                 if user.username in EmoteAdmin:
                     RandomReaction = ["clap", "heart", "thumbs", "wave", "wink"]
@@ -551,12 +551,6 @@ class Bot(BaseBot):
                     roomUsers = (await self.highrise.get_room_users()).content
                     for roomUser, _ in roomUsers:
                         await self.highrise.react(Rreaction, roomUser.id)
-
-            if message.lower().strip() == "!tipall":
-                if user.username in EmoteAdmin:
-                    roomUsers = (await self.highrise.get_room_users()).content
-                    for roomUser, _ in roomUsers:
-                        await self.highrise.tip_user(roomUser.id, "gold_bar_1")
 
         except Exception as e:
             print(f"error : {e}")

@@ -64,7 +64,7 @@ class Bot(BaseBot):
 
     async def on_user_join(self, user: User) -> None:
         try:
-            print(f"{user.username Joined Room")
+            print(f"{user.username} Joined Room")
             wm = [
             'Welcome to the Find Ur Love ❤️, where hearts connect! Take a seat, let love find you. Don\'t hesitate to say hi and start a conversation. Embrace the magic of connection and let your journey begin!',
             'Step into the Find Ur Love ❤️, where souls intertwine! Find your special someone and break the ice with a friendly hi. No need to be shy, love awaits you here. Enjoy the enchantment!',

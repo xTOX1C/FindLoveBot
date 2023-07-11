@@ -52,8 +52,19 @@ class Bot(BaseBot):
         except Exception as e:
             print(f"error : {e}")
 
+    async def on_reaction(self, user: User, reaction: Reaction, receiver: User) -> None:
+        text_to_emoji = {
+        "wink": "😉",
+        "wave": "👋",
+        "thumbs": "👍",
+        "heart": "❤️",
+        "clap": "👏",
+        }
+        await self.highrise.chat(f"\n{user.username} {text_to_emoji[reaction]} {receiver.username}")
+
     async def on_user_join(self, user: User) -> None:
         try:
+            print(f"{user.username Joined Room")
             wm = [
             'Welcome to the Find Ur Love ❤️, where hearts connect! Take a seat, let love find you. Don\'t hesitate to say hi and start a conversation. Embrace the magic of connection and let your journey begin!',
             'Step into the Find Ur Love ❤️, where souls intertwine! Find your special someone and break the ice with a friendly hi. No need to be shy, love awaits you here. Enjoy the enchantment!',
@@ -75,10 +86,10 @@ class Bot(BaseBot):
             
     async def on_chat(self, user: User, message: str):
         try:
-            _id = f"1_on_1:6448f9d57e36fb8bb4e65cb6:{user.id}"
-            _idx = f"1_on_1:{user.id}:6448f9d57e36fb8bb4e65cb6"
+            _bid = "6448f9d57e36fb8bb4e65cb6"
+            _id = f"1_on_1:{_bid}:{user.id}"
+            _idx = f"1_on_1:{user.id}:{_bid}"
             _rid = "64243855bf25fe0e8301bef6"
-
             if message.lower().lstrip().startswith(("!invite", "-invite")):
                 parts = message[1:].split()
                 args = parts[1:]
@@ -97,8 +108,8 @@ class Bot(BaseBot):
                 
                 for user in users:
                     user_id = user['user_id']
-                    __id = f"1_on_1:6448f9d57e36fb8bb4e65cb6:{user_id}"
-                    __idx = f"1_on_1:{user_id}:6448f9d57e36fb8bb4e65cb6"
+                    __id = f"1_on_1:{_bid}:{user_id}"
+                    __idx = f"1_on_1:{user_id}:{_bid}"
                     __rid = "64243855bf25fe0e8301bef6"
                     try:
                         await self.highrise.send_message(__id, "Join Room", "invite", __rid)
@@ -550,7 +561,10 @@ class Bot(BaseBot):
                     Rreaction = random.choice(RandomReaction)
                     roomUsers = (await self.highrise.get_room_users()).content
                     for roomUser, _ in roomUsers:
-                        await self.highrise.react(Rreaction, roomUser.id)
+                        if roomUser.id == _bid:
+                            pass
+                        else:
+                            await self.highrise.react(Rreaction, roomUser.id)
 
         except Exception as e:
             print(f"error : {e}")

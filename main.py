@@ -556,7 +556,12 @@ class Bot(BaseBot):
             elif message.lower().strip() == "uwu":
                 await self.highrise.send_emote("idle-uwu", user.id)
             elif message.lower().strip() == "uwumood":
-                await self.highrise.send_emote("idle-uwu", user.id)                
+                await self.highrise.send_emote("idle-uwu", user.id)
+            elif message.lower().strip() == "wrong":
+                await self.highrise.send_emote("dance-wrong", user.id)
+            elif message.lower().strip() == "dancewrong":
+                await self.highrise.send_emote("dance-wrong", user.id)
+                
             
             EmoteAdmin = ["sassika", "Ekichirou", "OGToxic", "SilverChain07", "AyyBubbls", "_ECLIPxE", "BabyyTwinkles"]
             if message.lower().strip() == "!reaction":

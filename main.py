@@ -36,6 +36,9 @@ from asyncio import run as arun
 import requests
 import random
 import asyncio
+import os
+import importlib
+user_warnings = {}
 
 class BotDefinition:
     def __init__(self, bot, room_id, api_token):
@@ -44,11 +47,27 @@ class BotDefinition:
         self.api_token = api_token
 
 class Bot(BaseBot):
+
+    async def advertisement(self):
+        i = 1
+        _ads = [
+            "\n💰 Show support, tip the jar! 🎉\nHelp our room thrive with your support. #Gratitude ",
+            "\n💻 Want Your Own Custom BOT? Contact @OGToxic for commissions. affordable, efficient, and reliable services.",
+            "\n💕 Grateful for your presence! Thank you for being here, making this chat special.",
+            "\n🤷 If you have any questions or need assistance, feel free to contact with mods. Your engagement means a lot!🙏",
+        ]
+        while True:
+            for _ads_ in _ads:
+                await self.highrise.chat(f"{_ads_} [{i}]")
+                await asyncio.sleep(29)
+                i += 1
     
     async def on_start(self, SessionMetadata: SessionMetadata) -> None:
         try:
             await self.highrise.walk_to(Position(16.5, 1.25, 12.5, "FrontLeft"))
-            await self.highrise.chat("Hey I'm Back! Sorry For Inconvenience")
+            await self.highrise.chat("Reconnected...")
+            ad_task = asyncio.create_task(self.advertisement())
+            await ad_task
         except Exception as e:
             print(f"error : {e}")
 
@@ -90,6 +109,10 @@ class Bot(BaseBot):
             _id = f"1_on_1:{_bid}:{user.id}"
             _idx = f"1_on_1:{user.id}:{_bid}"
             _rid = "64243855bf25fe0e8301bef6"
+
+            if message.lower().lstrip().startswith(("-", "!")):
+                await self.command_handler(user, message)        
+
             if message.lower().lstrip().startswith(("!invite", "-invite")):
                 parts = message[1:].split()
                 args = parts[1:]
@@ -127,44 +150,8 @@ class Bot(BaseBot):
                     
             if message.lower().lstrip().startswith(("-emote", "!emote")):
                 await self.highrise.send_whisper(user.id, "\nEmote can be used with just typing EMOTE NAME in our room. Here's an example of emote use\n  casual\n  fashionista\n  floating\n\nand all other emotes just say name in room of any emote")
-                await self.highrise.send_whisper(user.id, "\n• Note that these commands will only work in room called Find Ur Love ❤️ by @OGToxic. some emotes may not work due to restrictions.")                        
+                await self.highrise.send_whisper(user.id, "\n• Note that these commands will only work in room called Find Ur Love ❤️ by @OGToxic. some emotes may not work due to restrictions.")
 
-            if message.lower().lstrip().startswith(("!fight", "!rock", "!flirt")):
-                response = await self.highrise.get_room_users()
-                users = [content[0] for content in response.content]
-                usernames = [user.username.lower() for user in users]
-                parts = message[1:].split()
-                args = parts[1:]
-            
-                if len(args) < 1:
-                    await self.highrise.send_whisper(user.id, f"Usage: !{parts[0]} <@username>")
-                    return
-                elif args[0][0] != "@":
-                    await self.highrise.send_whisper(user.id, f"Invalid user format. Please use '@username'.")
-                    return
-                elif args[0][1:].lower() not in usernames:
-                    await self.highrise.send_whisper(user.id, f"{args[0][1:]} is not in the room.")
-                    return
-            
-                user_id = next((u.id for u in users if u.username.lower() == args[0][1:].lower()), None)
-                if not user_id:
-                    await self.highrise.send_whisper(user.id, f"User {args[0][1:]} not found")
-                    return
-            
-                try:
-                    if message.lower().startswith("!fight"):
-                        await self.highrise.chat(f"\n🥷 @{user.username} And @{args[0][1:]} Fighting With Each Other 🤺")
-                        await self.highrise.send_emote("emote-swordfight", user.id)
-                        await self.highrise.send_emote("emote-swordfight", user_id)
-                    elif message.lower().startswith("!rock"):
-                        await self.highrise.send_emote("emote-punkguitar", user.id)
-                        await self.highrise.send_emote("emote-punkguitar", user_id)
-                    elif message.lower().startswith("!flirt"):
-                        await self.highrise.chat(f"\n 😏 @{user.username} And @{args[0][1:]} Flirting On Each Other 😏❤️")
-                        await self.highrise.send_emote("emote-lust", user.id)
-                        await self.highrise.send_emote("emote-lust", user_id)
-                except Exception as e:
-                    print(f"An exception occurred[Due To {parts[0][1:]}]: {e}")            
             if message.lower().strip() == "lambipose":
                 await self.highrise.send_emote("emote-superpose", user.id)
             elif message.lower().strip() == "shuffledance":
@@ -560,23 +547,53 @@ class Bot(BaseBot):
             elif message.lower().strip() == "wrong":
                 await self.highrise.send_emote("dance-wrong", user.id)
             elif message.lower().strip() == "dancewrong":
-                await self.highrise.send_emote("dance-wrong", user.id)
-                
-            
-            EmoteAdmin = ["sassika", "Ekichirou", "OGToxic", "SilverChain07", "AyyBubbls", "_ECLIPxE", "BabyyTwinkles"]
-            if message.lower().strip() == "!reaction":
-                if user.username in EmoteAdmin:
-                    RandomReaction = ["clap", "heart", "thumbs", "wave", "wink"]
-                    Rreaction = random.choice(RandomReaction)
-                    roomUsers = (await self.highrise.get_room_users()).content
-                    for roomUser, _ in roomUsers:
-                        if roomUser.id == _bid:
-                            pass
+                await self.highrise.send_emote("dance-wrong", user.id)                
+
+            blacklisted_words = ["2 girls 1 cup", "2g1c", "4r5e", "5h1t", "5hit", "a55", "a_s_s", "acrotomophilia", "alabama hot pocket", "alaskan pipeline", "anal", "anilingus", "anus", "apeshit", "ar5e", "arrse", "arse", "arsehole", "ass", "ass-fucker", "ass-hat", "ass-pirate", "assbag", "assbandit", "assbanger", "assbite", "assclown", "asscock", "asscracker", "asses", "assface", "assfucker", "assfukka", "assgoblin", "asshat", "asshead", "asshole", "assholes", "asshopper", "assjacker", "asslick", "asslicker", "assmonkey", "assmunch", "assmuncher", "asspirate", "assshole", "asssucker", "asswad", "asswhole", "asswipe", "auto erotic", "autoerotic", "b!tch", "b00bs", "b17ch", "b1tch", "babeland", "baby batter", "baby juice", "ball gag", "ball gravy", "ball kicking", "ball licking", "ball sack", "ball sucking", "ballbag", "balls", "ballsack", "bampot", "bangbros", "bareback", "barely legal", "barenaked", "bastard", "bastardo", "bastinado", "bbw", "bdsm", "beaner", "beaners", "beastial", "beastiality", "beastility", "beaver cleaver", "beaver lips", "bellend", "bestial", "bestiality", "bi+ch", "biatch", "big black", "big breasts", "big knockers", "big tits", "bimbos", "birdlock", "bitch", "bitcher", "bitchers", "bitches", "bitchin", "bitching", "black cock", "blonde action", "blonde on blonde action", "bloody", "blow job", "blow your load", "blowjob", "blowjobs", "blue waffle", "blumpkin", "boiolas", "bollock", "bollocks", "bollok", "bollox", "bondage", "boner", "boob", "boobie", "boobs", "booobs", "boooobs", "booooobs", "booooooobs", "booty call", "breasts", "brown showers", "brunette action", "buceta", "bugger", "bukkake", "bulldyke", "bullet vibe", "bullshit", "bum", "bung hole", "bunghole", "bunny fucker", "busty", "butt", "butt-pirate", "buttcheeks", "butthole", "buttmunch", "buttplug", "c0ck", "c0cksucker", "camel toe", "camgirl", "camslut", "camwhore", "carpet muncher", "carpetmuncher", "cawk", "chinc", "chink", "choad", "chocolate rosebuds", "chode", "cipa", "circlejerk", "cl1t", "cleveland steamer", "clit", "clitface", "clitoris", "clits", "clover clamps", "clusterfuck", "cnut", "cock", "cock-sucker", "cockbite", "cockburger", "cockface", "cockhead", "cockjockey", "cockknoker", "cockmaster", "cockmongler", "cockmongruel", "cockmonkey", "cockmunch", "cockmuncher", "cocknose", "cocknugget", "cocks", "cockshit", "cocksmith", "cocksmoker", "cocksuck", "cocksuck ", "cocksucked", "cocksucked ", "cocksucker", "cocksucking", "cocksucks ", "cocksuka", "cocksukka", "cok", "cokmuncher", "coksucka", "coochie", "coochy", "coon", "coons", "cooter", "coprolagnia", "coprophilia", "cornhole", "cox", "crap", "creampie", "cum", "cumbubble", "cumdumpster", "cumguzzler", "cumjockey", "cummer", "cumming", "cums", "cumshot", "cumslut", "cumtart", "cunilingus", "cunillingus", "cunnie", "cunnilingus", "cunt", "cuntface", "cunthole", "cuntlick", "cuntlick ", "cuntlicker", "cuntlicker ", "cuntlicking", "cuntlicking ", "cuntrag", "cunts", "cyalis", "cyberfuc", "cyberfuck ", "cyberfucked ", "cyberfucker", "cyberfuckers", "cyberfucking ", "d1ck", "dammit", "damn", "darkie", "date rape", "daterape", "deep throat", "deepthroat", "dendrophilia", "dick", "dickbag", "dickbeater", "dickface", "dickhead", "dickhole", "dickjuice", "dickmilk", "dickmonger", "dickslap", "dicksucker", "dickwad", "dickweasel", "dickweed", "dickwod", "dike", "dildo", "dildos", "dingleberries", "dingleberry", "dink", "dinks", "dipshit", "dirsa", "dirty pillows", "dirty sanchez", "dlck", "dog style", "dog-fucker", "doggie style", "doggiestyle", "doggin", "dogging", "doggy style", "doggystyle", "dolcett", "domination", "dominatrix", "dommes", "donkey punch", "donkeyribber", "doochbag", "dookie", "doosh", "double dong", "double penetration", "douche", "douchebag", "dp action", "dry hump", "duche", "dumbshit", "dumshit", "dvda", "dyke", "eat my ass", "ecchi", "ejaculate", "ejaculated", "ejaculates ", "ejaculating ", "ejaculatings", "ejaculation", "ejakulate", "erotic", "erotism", "escort", "eunuch", "f u c k", "f u c k e r", "f4nny", "f_u_c_k", "fag", "fagbag", "fagg", "fagging", "faggit", "faggitt", "faggot", "faggs", "fagot", "fagots", "fags", "fagtard", "fanny", "fannyflaps", "fannyfucker", "fanyy", "fart", "farted", "farting", "farty", "fatass", "fcuk", "fcuker", "fcuking", "fecal", "feck", "fecker", "felatio", "felch", "felching", "fellate", "fellatio", "feltch", "female squirting", "femdom", "figging", "fingerbang", "fingerfuck ", "fingerfucked ", "fingerfucker ", "fingerfuckers", "fingerfucking ", "fingerfucks ", "fingering", "fistfuck", "fistfucked ", "fistfucker ", "fistfuckers ", "fistfucking ", "fistfuckings ", "fistfucks ", "fisting", "flamer", "flange", "fook", "fooker", "foot fetish", "footjob", "frotting", "fuck", "fuck buttons", "fucka", "fucked", "fucker", "fuckers", "fuckhead", "fuckheads", "fuckin", "fucking", "fuckings", "fuckingshitmotherfucker", "fuckme ", "fucks", "fucktards", "fuckwhit", "fuckwit", "fudge packer", "fudgepacker", "fuk", "fuker", "fukker", "fukkin", "fuks", "fukwhit", "fukwit", "futanari", "fux", "fux0r", "g-spot", "gang bang", "gangbang", "gangbanged", "gangbanged ", "gangbangs ", "gay sex", "gayass", "gaybob", "gaydo", "gaylord", "gaysex", "gaytard", "gaywad", "genitals", "giant cock", "girl on", "girl on top", "girls gone wild", "goatcx", "goatse", "god damn", "god-dam", "god-damned", "goddamn", "goddamned", "gokkun", "golden shower", "goo girl", "gooch", "goodpoop", "gook", "goregasm", "gringo", "grope", "group sex", "guido", "guro", "hand job", "handjob", "hard core", "hardcore", "hardcoresex ", "heeb", "hell", "hentai", "heshe", "ho", "hoar", "hoare", "hoe", "hoer", "homo", "homoerotic", "honkey", "honky", "hooker", "hore", "horniest", "horny", "hot carl", "hot chick", "hotsex", "how to kill", "how to murder", "huge fat", "humping", "incest", "intercourse", "jack off", "jack-off ", "jackass", "jackoff", "jail bait", "jailbait", "jap", "jelly donut", "jerk off", "jerk-off ", "jigaboo", "jiggaboo", "jiggerboo", "jism", "jiz", "jiz ", "jizm", "jizm ", "jizz", "juggs", "kawk", "kike", "kinbaku", "kinkster", "kinky", "kiunt", "knob", "knobbing", "knobead", "knobed", "knobend", "knobhead", "knobjocky", "knobjokey", "kock", "kondum", "kondums", "kooch", "kootch", "kum", "kumer", "kummer", "kumming", "kums", "kunilingus", "kunt", "kyke", "l3i+ch", "l3itch", "labia", "leather restraint", "leather straight jacket", "lemon party", "lesbo", "lezzie", "lmfao", "lolita", "lovemaking", "lust", "lusting", "m0f0", "m0fo", "m45terbate", "ma5terb8", "ma5terbate", "make me come", "male squirting", "masochist", "master-bate", "masterb8", "masterbat*", "masterbat3", "masterbate", "masterbation", "masterbations", "masturbate", "menage a trois", "milf", "minge", "missionary position", "mo-fo", "mof0", "mofo", "mothafuck", "mothafucka", "mothafuckas", "mothafuckaz", "mothafucked ", "mothafucker", "mothafuckers", "mothafuckin", "mothafucking ", "mothafuckings", "mothafucks", "mother fucker", "motherfuck", "motherfucked", "motherfucker", "motherfuckers", "motherfuckin", "motherfucking", "motherfuckings", "motherfuckka", "motherfucks", "mound of venus", "mr hands", "muff", "muff diver", "muffdiver", "muffdiving", "mutha", "muthafecker", "muthafuckker", "muther", "mutherfucker", "n1gga", "n1gger", "nambla", "nawashi", "nazi", "negro", "neonazi", "nig nog", "nigg3r", "nigg4h", "nigga", "niggah", "niggas", "niggaz", "nigger", "niggers ", "niglet", "nimphomania", "nipple", "nipples", "nob", "nob jokey", "nobhead", "nobjocky", "nobjokey", "nsfw images", "nude", "nudity", "numbnuts", "nutsack", "nympho", "nymphomania", "octopussy", "omorashi", "one cup two girls", "one guy one jar", "orgasim", "orgasim ", "orgasims ", "orgasm", "orgasms ", "orgy", "p0rn", "paedophile", "paki", "panooch", "panties", "panty", "pawn", "pecker", "peckerhead", "pedobear", "pedophile", "pegging", "penis", "penisfucker", "phone sex", "phonesex", "phuck", "phuk", "phuked", "phuking", "phukked", "phukking", "phuks", "phuq", "piece of shit", "pigfucker", "pimpis", "pis", "pises", "pisin", "pising", "pisof", "piss", "piss pig", "pissed", "pisser", "pissers", "pisses ", "pissflap", "pissflaps", "pissin", "pissin ", "pissing", "pissoff", "pissoff ", "pisspig", "playboy", "pleasure chest", "pole smoker", "polesmoker", "pollock", "ponyplay", "poo", "poof", "poon", "poonani", "poonany", "poontang", "poop", "poop chute", "poopchute", "porn", "porno", "pornography", "pornos", "prick", "pricks ", "prince albert piercing", "pron", "pthc", "pube", "pubes", "punanny", "punany", "punta", "pusies", "pusse", "pussi", "pussies", "pussy", "pussylicking", "pussys ", "pusy", "puto", "queaf", "queef", "queerbait", "queerhole", "quim", "raghead", "raging boner", "rape", "raping", "rapist", "rectum", "renob", "retard", "reverse cowgirl", "rimjaw", "rimjob", "rimming", "rosy palm", "rosy palm and her 5 sisters", "ruski", "rusty trombone", "s hit", "s&m", "s.o.b.", "s_h_i_t", "sadism", "sadist", "santorum", "scat", "schlong", "scissoring", "screwing", "scroat", "scrote", "scrotum", "semen", "sex", "sexo", "sexy", "sh!+", "sh!t", "sh1t", "shag", "shagger", "shaggin", "shagging", "shaved beaver", "shaved pussy", "shemale", "shi+", "shibari", "shit", "shit-ass", "shit-bag", "shit-bagger", "shit-brain", "shit-breath", "shit-cunt", "shit-dick", "shit-eating", "shit-face", "shit-faced", "shit-fit", "shit-head", "shit-heel", "shit-hole", "shit-house", "shit-load", "shit-pot", "shit-spitter", "shit-stain", "shitass", "shitbag", "shitbagger", "shitblimp", "shitbrain", "shitbreath", "shitcunt", "shitdick", "shite", "shiteating", "shited", "shitey", "shitface", "shitfaced", "shitfit", "shitfuck", "shitfull", "shithead", "shitheel", "shithole", "shithouse", "shiting", "shitings", "shitload", "shitpot", "shits", "shitspitter", "shitstain", "shitted", "shitter", "shitters ", "shittiest", "shitting", "shittings", "shitty", "shitty ", "shity", "shiz", "shiznit", "shota", "shrimping", "skank", "skeet", "slanteye", "slut", "slutbag", "sluts", "smeg", "smegma", "smut", "snatch", "snowballing", "sodomize", "sodomy", "son-of-a-bitch", "spac", "spic", "spick", "splooge", "splooge moose", "spooge", "spread legs", "spunk", "strap on", "strapon", "strappado", "strip club", "style doggy", "suck", "sucks", "suicide girls", "sultry women", "swastika", "swinger", "t1tt1e5", "t1tties", "tainted love", "tard", "taste my", "tea bagging", "teets", "teez", "testical", "testicle", "threesome", "throating", "thundercunt", "tied up", "tight white", "tit", "titfuck", "tits", "titt", "tittie5", "tittiefucker", "titties", "titty", "tittyfuck", "tittywank", "titwank", "tongue in a", "topless", "tosser", "towelhead", "tranny", "tribadism", "tub girl", "tubgirl", "turd", "tushy", "tw4t", "twat", "twathead", "twatlips", "twatty", "twink", "twinkie", "two girls one cup", "twunt", "twunter", "undressing", "upskirt", "urethra play", "urophilia", "v14gra", "v1gra", "va-j-j", "vag", "vagina", "venus mound", "viagra", "vibrator", "violet wand", "vjayjay", "vorarephilia", "voyeur", "vulva", "w00se", "wang", "wank", "wanker", "wanky", "wet dream", "wetback", "white power", "whoar", "whore", "willies", "willy", "wrapping men", "wrinkled starfish", "xrated", "xx", "xxx", "yaoi", "yellow showers", "yiffy", "zoophilia"]
+            if user.id not in user_warnings:
+                user_warnings[user.id] = 0
+
+            try:
+                for word in blacklisted_words:
+                    if word in message.lower():
+                        user_warnings[user.id] += 1
+                        censored_word = word[0] + '*' * (len(word) - 2) + word[-1]
+                        if user_warnings[user.id] == 2:
+                            await self.highrise.send_whisper(user.id, f"\nMuted For 60 Seconds, Because Of Word: {censored_word}")
+                            await self.highrise.moderate_room(user.id, "mute", 60)
+                        elif user_warnings[user.id] >= 3:
+                            await self.highrise.send_whisper(user.id, f"\nMuted For 10 Mins, Because Of Word: {censored_word}")
+                            await self.highrise.moderate_room(user.id, "mute", 360)
                         else:
-                            await self.highrise.react(Rreaction, roomUser.id)
+                            await self.highrise.chat(f"\nHey @{user.username}! It seems your message included inappropriate language. Let's maintain a respectful environment. Please avoid using such words in the future. Thanks! 🙏\n\n • username : @{user.username}\n • word : {censored_word}\n • Possible actions : mute/ban/kick")
+                            await self.highrise.send_whisper(user.id, f"\nHey @{user.username}! It seems your message included inappropriate language. Let's maintain a respectful environment. Please avoid using such words in the future. Thanks! 🙏\n\n • word : {censored_word}\n • Possible actions : mute/ban/kick")
+                        break
+            except Exception as e:
+                print(f"An exception occurred[BlackList-Words]: {e}")
 
         except Exception as e:
             print(f"error : {e}")
+        
+    async def command_handler(self, user: User, message: str):
+        parts = message.split(" ")
+        command = parts[0][1:]
+        functions_folder = "handlers/mods"
+        # Check if the function exists in the module
+        for file_name in os.listdir(functions_folder):
+            if file_name.endswith(".py"):
+                module_name = file_name[:-3]  # Remove the '.py' extension
+                module_path = os.path.join(functions_folder, file_name)
+                
+                # Load the module
+                spec = importlib.util.spec_from_file_location(module_name, module_path)
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                
+                # Check if the function exists in the module
+                if hasattr(module, command) and callable(getattr(module, command)):
+                    function = getattr(module, command)
+                    await function(self, user, message)
+        return
 
     async def run(self, room_id, token):
         definitions = [BotDefinition(self, room_id, token)]

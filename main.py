@@ -57,10 +57,10 @@ class Bot(BaseBot):
             "\n🤷 If you have any questions or need assistance, feel free to contact with mods. Your engagement means a lot!🙏",
         ]
         while True:
-            for _ads_ in _ads:
-                await self.highrise.chat(f"{_ads_} [{i}]")
-                await asyncio.sleep(29)
-                i += 1
+            Flow = random.choice(_ads)
+            await self.highrise.chat(f"{_ads_} [{i}]")
+            await asyncio.sleep(29)
+            i += 1
     
     async def on_start(self, SessionMetadata: SessionMetadata) -> None:
         try:

@@ -555,7 +555,7 @@ class Bot(BaseBot):
 
             try:
                 for word in blacklisted_words:
-                    if word in message.lower().strip():
+                    if word in message.lower().split():
                         user_warnings[user.id] += 1
                         censored_word = word[0] + '*' * (len(word) - 2) + word[-1]
                         if user_warnings[user.id] == 2:

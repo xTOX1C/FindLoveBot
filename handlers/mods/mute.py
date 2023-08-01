@@ -33,7 +33,7 @@ async def mute(self, user: User, message: str) -> None:
     try:
         await self.highrise.moderate_room(user_id, "mute", parts[2])
         try:
-            await self.highrise.send_message(_id, f"Action : mute\muted by : @{user.username}\nmuted user : @{username}\nMute length : {parts[2]}", "text")
+            await self.highrise.send_message(_id, f"Action : mute\nmuted by : @{user.username}\nmuted user : @{username}\nMute length : {parts[2]}", "text")
         except:
             await self.highrise.send_message(_idx, f"Action : mute\nmuted by : @{user.username}\nmuted user : @{username}\nMute length : {parts[2]}", "text")
     except Exception as e:

@@ -58,7 +58,7 @@ class Bot(BaseBot):
         ]
         while True:
             Flow = random.choice(_ads)
-            await self.highrise.chat(f"{_ads_} [{i}]")
+            await self.highrise.chat(f"{Flow} [{i}]")
             await asyncio.sleep(29)
             i += 1
     

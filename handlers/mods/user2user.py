@@ -30,7 +30,7 @@ async def fight(self, user: User, message: str) -> None:
     except Exception as e:
         print(f"An exception occurred[Due To {parts[0][1:]}]: {e}")
 
-async def punk(self, user: User, message: str) -> None:
+async def rock(self, user: User, message: str) -> None:
     response = await self.highrise.get_room_users()
     users = [content[0] for content in response.content]
     usernames = [user.username.lower() for user in users]

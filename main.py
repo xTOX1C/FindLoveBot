@@ -66,8 +66,8 @@ class Bot(BaseBot):
         try:
             await self.highrise.walk_to(Position(16.5, 1.25, 12.5, "FrontLeft"))
             await self.highrise.chat("Reconnected...")
-            ad_task = asyncio.create_task(self.advertisement())
-            await ad_task
+            #ad_task = asyncio.create_task(self.advertisement())
+            #await ad_task
         except Exception as e:
             print(f"error : {e}")
 

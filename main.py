@@ -549,7 +549,7 @@ class Bot(BaseBot):
             elif message.lower().strip() == "dancewrong":
                 await self.highrise.send_emote("dance-wrong", user.id)
             elif message.lower().strip() == "stargazing":
-                await self.highrise.send_emote("emote-stargaze", user.id)
+                await self.highrise.send_emote("emote-stargazer", user.id)
 
             blacklisted_words = ["fuck", "nigga", "mf", "butt", "boobs", "pussy", "dick", "asshole", "ass", "shit", "sex", "hoe", "slut", "bitch", "ugly"]
             if user.id not in user_warnings:

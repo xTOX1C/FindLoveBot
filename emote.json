@@ -200,7 +200,7 @@
     "dancewrong": "dance-wrong",
     "stargazing": "emote-stargazer",
     "ditzypose": "emote-pose9",
-    "scritchy": "idle-wild_icon",
+    "scritchy": "idle-wild",
     "laidback": "sit-open",
     "arabesque": "emote-pose10",
     "blush": "emote-shy2",
@@ -225,5 +225,7 @@
     "creepypuppet": "dance-creepypuppet",
     "celebration": "emote-celebrationstep",
     "celebrationstep": "emote-celebrationstep",
-    "revelations": "emote-headblowup"
+    "revelations": "emote-headblowup",
+    "bitnervous": "idle-nervous",
+    "nervous": "idle-nervous"
 }

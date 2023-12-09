@@ -65,12 +65,12 @@ class Bot(BaseBot):
             self.emotes = json.load(f)
 
             self.continuous_emote_tasks = {} 
-            self.AREA_MIN_X = 11.5
+            self.AREA_MIN_X = 10.5
             self.AREA_MAX_X = 15.5
             self.AREA_MIN_Y = 1.0
             self.AREA_MAX_Y = 1.0
-            self.AREA_MIN_Z = 12.5
-            self.AREA_MAX_Z = 17.5
+            self.AREA_MIN_Z = 11.5
+            self.AREA_MAX_Z = 18.5
             self.user_positions = {}
             self.continuous_emote_handler = ContinuousEmoteHandler(self.emotes, self.continuous_emote_tasks)
 

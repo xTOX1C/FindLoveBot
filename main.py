@@ -144,7 +144,7 @@ class Bot(BaseBot):
     async def on_start(self, SessionMetadata: SessionMetadata) -> None:
         try:
             print("alive")
-            await self.highrise.walk_to(Position(16.0, 1.0, 7.0, "FrontLeft"))
+            await self.highrise.walk_to(Position(16.5, 1.0, 6.5, "FrontLeft"))
             await self.highrise.chat("Reconnected...")
             room_users_response = await self.highrise.get_room_users()
             room_users = room_users_response.content

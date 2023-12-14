@@ -45,7 +45,7 @@ import json
 import time
 import importlib
 user_warnings = {}
-EMOTE_LIST = ["emote-celebrate","emote-stargazer", "emote-astronaut", "dance-pinguin", "dance-anime", "dance-creepypuppet", "emote-creepycute", "emote-shy2", "emote-pose10", "emote-punkguitar","emote-zombierun", "emote-gravity", "dance-icecream", "dance-wrong", "emote-headblowup", "idle-guitar", "dance-tiktok10", "idle_singing", "dance-tiktok9", "idle-dance-casual"]
+EMOTE_LIST = ["emote-timejump", "emote-celebrate","emote-stargazer", "emote-astronaut", "dance-pinguin", "dance-anime", "dance-creepypuppet", "emote-creepycute", "emote-shy2", "emote-pose10", "emote-punkguitar","emote-zombierun", "emote-gravity", "dance-icecream", "dance-wrong", "emote-headblowup", "idle-guitar", "dance-tiktok10", "idle_singing", "dance-tiktok9", "idle-dance-casual"]
 
 class BotDefinition:
     def __init__(self, bot, room_id, api_token):
@@ -202,7 +202,7 @@ class Bot(BaseBot):
             ]
             rwm = random.choice(wm)
             await self.highrise.send_whisper(user.id, f'Hey @{user.username}\nWelcome to the Find Ur Love ❤️\n{rwm}\n\nJust say "help" for guide\n~ Code by @OGToxic')
-            await self.highrise.send_whisper(user.id, f'\nTry New Emote "Gottago"')
+            await self.highrise.send_whisper(user.id, f'\nTry new emotes "Gottago" and "Timejump')
             face = ["FrontRight","FrontLeft"]
             fp = random.choice(face)
             _ = [Position(0.5, 1.25, 29.5, fp),Position(10.5, 1.25, 22.5, fp),Position(6.5, 1.0, 19.5, fp),Position(7.5, 1.25, 11.5, fp),Position(14.5, 7.25, 3.5, fp),Position(14.5, 7.0, 17.5, fp),Position(0.5, 7.0, 3.5, fp),Position(14.5, 7.0, 28.5, fp),Position(1.5, 14.5, 3.5, fp),Position(14.5, 14.5, 3.5, fp),Position(14.5, 14.5, 16.5, fp),Position(14.5, 14.5, 28.5, fp),]

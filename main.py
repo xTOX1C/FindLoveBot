@@ -202,7 +202,7 @@ class Bot(BaseBot):
             ]
             rwm = random.choice(wm)
             await self.highrise.send_whisper(user.id, f'Hey @{user.username}\nWelcome to the Find Ur Love ❤️\n{rwm}\n\nJust say "help" for guide\n~ Code by @OGToxic')
-            await self.highrise.send_whisper(user.id, f'\nOnly 5 hours left for voting on a building competition. Please consider voting for "Room A" at the official Highrise Instagram story poll. 💗 \n\nDoing a generous giveaway tonight if it wins. 🪄 And a smaller one for the support if it does not. 🤍')
+            await self.highrise.send_whisper(user.id, f'\nTry New Emote "Gottago"')
             face = ["FrontRight","FrontLeft"]
             fp = random.choice(face)
             _ = [Position(0.5, 1.25, 29.5, fp),Position(10.5, 1.25, 22.5, fp),Position(6.5, 1.0, 19.5, fp),Position(7.5, 1.25, 11.5, fp),Position(14.5, 7.25, 3.5, fp),Position(14.5, 7.0, 17.5, fp),Position(0.5, 7.0, 3.5, fp),Position(14.5, 7.0, 28.5, fp),Position(1.5, 14.5, 3.5, fp),Position(14.5, 14.5, 3.5, fp),Position(14.5, 14.5, 16.5, fp),Position(14.5, 14.5, 28.5, fp),]

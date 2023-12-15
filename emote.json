@@ -230,5 +230,6 @@
     "gottago": "idle-toilet",
     "gtg": "idle-toilet",
     "timejump": "emote-timejump",
+    "brb": "emote-timejump",
     "nervous": "idle-nervous"
 }

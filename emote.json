@@ -231,5 +231,7 @@
     "gtg": "idle-toilet",
     "timejump": "emote-timejump",
     "brb": "emote-timejump",
+    "jingle": "dance-jinglebell",
+    "jinglehop": "dance-jinglebell",
     "nervous": "idle-nervous"
 }

@@ -346,8 +346,10 @@ class Bot(BaseBot):
 
             if message.lower().lstrip() == "-rf" and user_id in self._mods:
                 await self.highrise.send_message(conversation_id, "Restarting")
-                await self.restart_program()        
-
+                await self.restart_program()
+        except Exception as e:
+                print(f"Error in messages : {e}")
+            
     async def mod_handler(self, user: User, message: str):
         parts = message.split(" ")
         command = parts[0][1:]

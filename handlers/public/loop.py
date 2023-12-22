@@ -15,6 +15,7 @@ class ContinuousEmoteHandler:
                 task = self.continuous_emote_tasks.pop(user_id)
                 task.cancel()
                 try:
+                    await asyncio.sleep(0.1)
                     await task
                 except asyncio.CancelledError:
                     pass

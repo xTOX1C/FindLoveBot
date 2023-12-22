@@ -9,6 +9,7 @@ from highrise import (
     UserLeftEvent,
 )
 from highrise.models import (
+    GetMessagesRequest,
     AnchorPosition,
     ChannelEvent,
     ChannelRequest,
@@ -67,7 +68,7 @@ class Bot(BaseBot):
             self.continuous_emote_tasks = {} 
             self.AREA_MIN_X = 10.5
             self.AREA_MAX_X = 15.5
-            self.AREA_MIN_Y = 1.0
+            self.AREA_MIN_Y = 0
             self.AREA_MAX_Y = 1.0
             self.AREA_MIN_Z = 11.5
             self.AREA_MAX_Z = 18.5
@@ -144,26 +145,44 @@ class Bot(BaseBot):
     async def on_start(self, SessionMetadata: SessionMetadata) -> None:
         try:
             print("alive")
+    
+            # Check and cancel existing task if it's running
+            if hasattr(self, 'continuous_emotes_task') and not self.continuous_emotes_task.done():
+                self.continuous_emotes_task.cancel()
+    
             await self.highrise.walk_to(Position(16.5, 1.0, 6.5, "FrontLeft"))
             await self.highrise.chat("Reconnected...")
+    
             room_users_response = await self.highrise.get_room_users()
             room_users = room_users_response.content
+    
             for user, pos in room_users:
                 if self.is_user_in_specified_area(pos):
-                   await self.on_user_move(user, pos)
-                   print(f"Initialization complete for user {user.username}.")
+                    await self.on_user_move(user, pos)
+                    print(f"Initialization complete for user {user.username}.")
                 else:
-                   print(f"User {user.username} is not in the specified area. Skipping initialization.")
-            asyncio.create_task(self.send_continuous_emotes())    
-
+                    print(f"User {user.username} is not in the specified area. Skipping initialization.")
+    
+            # Run the new task
+            self.continuous_emotes_task = asyncio.create_task(self.send_continuous_emotes())
+    
             while True:
+                # Check and cancel existing task if it's running for sending individual emotes
+                if hasattr(self, 'send_emote_task') and not self.send_emote_task.done():
+                    self.send_emote_task.cancel()
+    
                 random_key = random.choice(list(self.emotes.keys()))
                 random_emote = self.emotes[random_key]
-                await self.highrise.send_emote(random_emote)
+    
+                # Run the new task for sending individual emotes
+                self.send_emote_task = asyncio.create_task(self.highrise.send_emote(random_emote))
                 await asyncio.sleep(10)
-
+    
+        except asyncio.CancelledError:
+            # Catch the CancelledError to handle task cancellation
+            print("Task canceled.")
         except Exception as e:
-            print(f"error : {e}")
+            print(f"error: {e}")
 
     async def on_reaction(self, user: User, reaction: Reaction, receiver: User) -> None:
         text_to_emoji = {
@@ -317,7 +336,18 @@ class Bot(BaseBot):
 
         except Exception as e:
             print(f"error : {e}")
-        
+
+    async def on_message(self, user_id: str, conversation_id: str, is_new_conversation: bool) -> None:
+        try:
+            response = await self.highrise.get_messages(conversation_id)
+            if isinstance(response, GetMessagesRequest.GetMessagesResponse):
+                message = response.messages[0].content
+            print (message)
+
+            if message.lower().lstrip() == "-rf" and user_id in self._mods:
+                await self.highrise.send_message(conversation_id, "Restarting")
+                await self.restart_program()        
+
     async def mod_handler(self, user: User, message: str):
         parts = message.split(" ")
         command = parts[0][1:]
@@ -366,7 +396,8 @@ class Bot(BaseBot):
 
 #keep_alive()
 if __name__ == "__main__":
-    room_id = "6552fb4719c844f40b94297e"
-    token = "2b60f534bed1a2ae7e79262ac7a3fd734495cc600261be25daba5545f27e516c"
+    room_id = "64243855bf25fe0e8301bef6"
+    token = "5375b606609e26c7d95570649f6565e9de9483b571d603991188178d925594c5"
     arun(Bot().run(room_id, token))
-            
+
+                          

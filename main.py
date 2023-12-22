@@ -398,8 +398,8 @@ class Bot(BaseBot):
 
 #keep_alive()
 if __name__ == "__main__":
-    room_id = "64243855bf25fe0e8301bef6"
-    token = "5375b606609e26c7d95570649f6565e9de9483b571d603991188178d925594c5"
+    room_id = "6552fb4719c844f40b94297e"
+    token = "2b60f534bed1a2ae7e79262ac7a3fd734495cc600261be25daba5545f27e516c"
     arun(Bot().run(room_id, token))
 
                           

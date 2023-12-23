@@ -264,11 +264,7 @@ class Bot(BaseBot):
 
             if message.lower().lstrip() == "help":
                 await self.highrise.send_whisper(user.id, f"\n-loop emotename\n• Example :\n  loop enthused\n  stop ( to stop loop)\n\nemotename\nemotename @username\n• Example:\n  enthused\n  enthused @findlove")
-            
-            if message.lower().lstrip() == "-rf" and user.username.lower() in self._mods:
-                await self.highrise.send_whisper(user.id, f"\nRestarting")
-                await self.restart_program()
-            
+                
             if message.lower().strip().startswith(("!")):
                 if user.username.lower() in self._mods:
                     pass

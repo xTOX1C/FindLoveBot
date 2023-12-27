@@ -46,7 +46,7 @@ import json
 import time
 import importlib
 user_warnings = {}
-EMOTE_LIST = ["dance-jinglebell", "emote-timejump", "emote-celebrate","emote-stargazer", "emote-astronaut", "dance-pinguin", "dance-anime", "dance-creepypuppet", "emote-creepycute", "emote-shy2", "emote-pose10", "emote-punkguitar","emote-zombierun", "emote-gravity", "dance-icecream", "dance-wrong", "emote-headblowup", "idle-guitar", "dance-tiktok10", "idle_singing", "dance-tiktok9", "idle-dance-casual"]
+EMOTE_LIST = ["emote-hyped", "dance-jinglebell", "emote-timejump", "emote-celebrate","emote-stargazer", "emote-astronaut", "dance-pinguin", "dance-anime", "dance-creepypuppet", "emote-creepycute", "emote-shy2", "emote-pose10", "emote-punkguitar","emote-zombierun", "emote-gravity", "dance-icecream", "dance-wrong", "emote-headblowup", "idle-guitar", "dance-tiktok10", "idle_singing", "dance-tiktok9", "idle-dance-casual"]
 
 class BotDefinition:
     def __init__(self, bot, room_id, api_token):

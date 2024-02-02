@@ -305,8 +305,8 @@ class Bot(BaseBot):
             #elif emote_detect not in self.emotes:
                #await self.highrise.chat("\nEmote Not Found")
 
-            #if message.lower().strip().startswith(("-")):
-                #await self.public_handler(user, message)
+            if message.lower().strip().startswith(("-")):
+                await self.public_handler(user, message)
 
             blacklisted_words = ["fuck", "nigga", "mf", "butt", "boobs", "pussy", "dick", "asshole", "ass", "shit", "sex", "hoe", "slut", "bitch", "ugly"]
             if user.id not in user_warnings:

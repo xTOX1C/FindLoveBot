@@ -17,6 +17,6 @@ async def ride(self, user: User, message: str):
     for _ in range(8):
         # Assuming Position has appropriate constructor parameters
         await self.highrise.teleport(user.id, Position(random.randint(1, 18), random.randint(1, 30), random.randint(1, 30), "FrontLeft"))
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(1)
         
     await self.highrise.teleport(user.id, your_pos)

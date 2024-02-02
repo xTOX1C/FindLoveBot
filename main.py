@@ -36,7 +36,7 @@ from highrise.models import (
     UserLeftEvent,
 )
 from asyncio import run as arun
-from handlers.public.loop import ContinuousEmoteHandler
+from handlers.loop import ContinuousEmoteHandler
 import requests
 import random
 import asyncio
